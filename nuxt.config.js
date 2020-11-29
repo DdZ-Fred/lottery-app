@@ -25,6 +25,8 @@ export default {
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/stylelint
     '@nuxtjs/stylelint-module',
+    // Tailwind 1.9+
+    '@nuxtjs/tailwindcss',
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
@@ -38,4 +40,4 @@ export default {
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
-}
+};

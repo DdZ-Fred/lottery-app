@@ -33,6 +33,7 @@
     "@nuxtjs/eslint-config-typescript": "^3.0.0",
     "@nuxtjs/eslint-module": "^2.0.0",
     "@nuxtjs/stylelint-module": "^4.0.0",
+    "@nuxtjs/tailwindcss": "^3.2.0",
     "@openzeppelin/test-environment": "^0.1.8",
     "@types/jest": "^26.0.15",
     "@vue/test-utils": "^1.1.0",
