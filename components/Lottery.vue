@@ -10,10 +10,10 @@
     </div>
 
     <h3 class="py-4 font-bold">Want to try your luck ?</h3>
-    <div class="pl-4">
+    <div class="pl-6">
       <fieldset>
         <label for="etherAmount">Amount of ether to enter</label>
-        <input
+        <a-input
           id="etherAmount"
           v-model="form.etherAmount"
           type="text"
@@ -23,7 +23,7 @@
     </div>
 
     <h3 class="py-4 font-bold"></h3>
-    <div class="pl-4"></div>
+    <div class="pl-6"></div>
   </div>
 </template>
 
