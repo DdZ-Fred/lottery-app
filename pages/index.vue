@@ -1,43 +1,18 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">lottery-app</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-      <div v-if="isWeb3Ready">
-        <Web3Version />
-      </div>
-    </div>
-  </div>
+  <Lottery v-if="isWeb3Ready" />
+  <div v-else>LOADING</div>
 </template>
 
 <script lang="js">
 import Vue from 'vue'
-import Web3Version from '~/components/Web3Version.vue'
+import Lottery from '~/components/Lottery.vue'
 
 export default {
   ssr: false,
-  components: { Web3Version },
+  components: { Lottery },
   computed: {
     isWeb3Ready() {
-      return !!this.$web3;
+      return !!this.$web3 && !!this.$lottery;
     }
   }
 }
