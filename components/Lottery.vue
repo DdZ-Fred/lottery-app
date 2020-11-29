@@ -11,15 +11,18 @@
 
     <h3 class="py-4 font-bold">Want to try your luck ?</h3>
     <div class="pl-6">
-      <fieldset>
-        <label for="etherAmount">Amount of ether to enter</label>
-        <a-input
-          id="etherAmount"
-          v-model="form.etherAmount"
-          type="text"
-          name="etherAmount"
-        />
-      </fieldset>
+      <a-form :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+        <a-form-item label="Amount of ether to enter">
+          <a-input-number
+            id="etherAmount"
+            v-model="form.etherAmount"
+            :min="1000000"
+            :step="100"
+            type="text"
+            name="etherAmount"
+          />
+        </a-form-item>
+      </a-form>
     </div>
 
     <h3 class="py-4 font-bold"></h3>
