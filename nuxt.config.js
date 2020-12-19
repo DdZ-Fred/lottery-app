@@ -14,7 +14,12 @@ export default {
   css: ['ant-design-vue/dist/antd.css'],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: [{ src: '~/plugins/web3.js', mode: 'client' }, '~/plugins/antdv.js'],
+  plugins: [
+    { src: '~/plugins/web3.js', mode: 'client' },
+    '~/plugins/antdv.js',
+    '~/plugins/filters/index.js',
+    '~/plugins/vee-validate.js',
+  ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,

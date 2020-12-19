@@ -2,46 +2,87 @@
   <div class="p-8">
     <h1 class="font-bold text-3xl pb-2">Lottery Contract</h1>
     <div>
-      <span>The contract is managed by {{ manager }}</span>
+      <span>The contract is managed by {{ managerAccountAddress }}</span>
       <p>
         There are currently {{ players.length }} people playing and competing to
-        win {{ balance }} ether!
+        win {{ etherBalance }} ether!
       </p>
     </div>
-
-    <h3 class="py-4 font-bold">Want to try your luck ?</h3>
-    <div class="pl-6">
-      <a-form :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
-        <a-form-item label="Amount of ether to enter">
-          <a-input-number
-            id="etherAmount"
-            v-model="form.etherAmount"
-            :min="1000000"
-            :step="100"
-            type="text"
-            name="etherAmount"
-          />
-        </a-form-item>
-      </a-form>
-    </div>
+    <template v-if="managerAccountAddress === null">BLABLA</template>
+    <template v-else-if="isCurrentUserManager"> MANAGER CONTENT </template>
+    <template v-else>
+      <h3 class="py-4 font-bold">Want to try your luck ?</h3>
+      <div class="pl-6">
+        <ValidationObserver
+          ref="playerFormObserver"
+          v-slot="{ invalid, dirty }"
+        >
+          <a-form :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+            <ValidationProvider
+              v-slot="slotProps"
+              name="Amount of ether"
+              rules="required"
+              slim
+            >
+              <a-form-item
+                label="Amount of ether to enter"
+                has-feedback
+                :validate-status="toValidateStatus(slotProps)"
+                :help="slotProps.errors[0]"
+              >
+                <a-input id="etherAmount" v-model="playerForm.etherAmount" />
+              </a-form-item>
+            </ValidationProvider>
+            <a-button
+              type="primary"
+              :disabled="invalid || !dirty"
+              :loading="false"
+              @click="onPlayerEnter"
+            >
+              Enter
+            </a-button>
+          </a-form>
+        </ValidationObserver>
+      </div>
+    </template>
 
     <h3 class="py-4 font-bold"></h3>
     <div class="pl-6"></div>
   </div>
 </template>
-
 <script>
+import { mapState } from 'vuex';
+import { ValidationProvider, ValidationObserver } from 'vee-validate';
+import toValidateStatusMixin from '~/mixins/toValidateStatus';
+
 export default {
   name: 'Lottery',
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
+  mixins: [toValidateStatusMixin],
   data() {
     return {
-      manager: null,
+      managerAccountAddress: null,
       balance: null,
       players: [],
-      form: {
+      playerForm: {
         etherAmount: '',
       },
     };
+  },
+  computed: {
+    ...mapState({
+      currentUserAccountAddress: (state) => state.user.accountAddress,
+    }),
+    isCurrentUserManager() {
+      return false;
+      // return this.managerAccountAddress === this.currentUserAccountAddress;
+    },
+    etherBalance() {
+      return this.balance ? this.$web3.utils.fromWei(this.balance, 'ether') : 0;
+    },
   },
   mounted() {
     this.getManager();
@@ -51,8 +92,10 @@ export default {
   methods: {
     async getManager() {
       try {
-        const manager = await this.$lottery.methods.manager().call();
-        this.manager = manager;
+        const managerAccountAddress = await this.$lottery.methods
+          .manager()
+          .call();
+        this.managerAccountAddress = managerAccountAddress.toLowerCase();
       } catch (error) {
         console.error(error);
       }
@@ -73,6 +116,17 @@ export default {
         this.balance = balance;
       } catch (error) {
         console.error(error);
+      }
+    },
+    async onPlayerEnter() {
+      try {
+        await this.$lottery.methods.enter().send({
+          from: this.currentUserAccountAddress,
+          value: this.$web3.utils.toWei(this.playerForm.etherAmount, 'ether'),
+        });
+        await this.getPlayers();
+      } catch (error) {
+        console.log(error);
       }
     },
   },

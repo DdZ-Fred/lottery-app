@@ -6,7 +6,7 @@ import { abi } from '~/build/contracts/Lottery.json';
 
 const lotteryContractAddress = '0xFEb5eE93409e545adfA2F06d3a8cB6Ebc4e32Ec4';
 
-const web3Plugin = async (_, inject) => {
+const web3Plugin = async ({ store }, inject) => {
   let web3 = null;
 
   // Basically returns window.ethereum
@@ -19,7 +19,8 @@ const web3Plugin = async (_, inject) => {
     // Check doc: https://docs.metamask.io/guide/rpc-api.html#eth-requestaccounts
     // Request the user to provide a account address.
     // It opens Metamask extension to allow the user to select one
-    await provider.request({ method: 'eth_requestAccounts' });
+    const accounts = await provider.request({ method: 'eth_requestAccounts' });
+    store.commit('user/setAccountAddress', accounts[0].toLowerCase());
   } else {
     console.error('Please install Metamask!! using default provider');
     web3 = new Web3(Web3.givenProvider);
