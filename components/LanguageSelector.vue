@@ -1,5 +1,9 @@
 <template>
-  <a-select :default-value="currentLocale" @change="onLanguageChange">
+  <a-select
+    :default-value="currentLocale"
+    :loading="$wait.is('language-change')"
+    @change="onLanguageChange"
+  >
     <a-select-option
       v-for="locale in $i18n.locales"
       :key="locale.code"
@@ -9,8 +13,9 @@
     </a-select-option>
   </a-select>
 </template>
-
 <script>
+import { waitFor } from 'vue-wait';
+
 export default {
   name: 'LanguageSelector',
   computed: {
@@ -19,9 +24,9 @@ export default {
     },
   },
   methods: {
-    async onLanguageChange(newValue) {
+    onLanguageChange: waitFor('language-change', async function (newValue) {
       await this.$i18n.setLocale(newValue);
-    },
+    }),
   },
 };
 </script>

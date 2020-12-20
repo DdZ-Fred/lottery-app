@@ -28,8 +28,8 @@
           <a-form :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
             <ValidationProvider
               v-slot="slotProps"
-              :name="$t('lottery.playerContent.etherAmountField')"
-              rules="required"
+              name="lottery.playerContent.etherAmountField"
+              rules="required|iban"
               slim
             >
               <a-form-item
@@ -45,7 +45,7 @@
               v-t="'common.enter'"
               type="primary"
               :disabled="invalid || !dirty"
-              :loading="false"
+              :loading="$wait.is('player-enter')"
               @click="onPlayerEnter"
             />
           </a-form>
@@ -59,6 +59,7 @@
 </template>
 <script>
 import { mapState } from 'vuex';
+import { waitFor } from 'vue-wait';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import toValidateStatusMixin from '~/mixins/toValidateStatus';
 import LanguageSelector from '~/components/LanguageSelector.vue';
@@ -99,7 +100,7 @@ export default {
     this.getBalance();
   },
   methods: {
-    async getManager() {
+    getManager: waitFor('get-manager', async function () {
       try {
         const managerAccountAddress = await this.$lottery.methods
           .manager()
@@ -108,16 +109,16 @@ export default {
       } catch (error) {
         console.error(error);
       }
-    },
-    async getPlayers() {
+    }),
+    getPlayers: waitFor('get-players', async function () {
       try {
         const players = await this.$lottery.methods.getPlayers().call();
         this.players = players;
       } catch (error) {
         console.error(error);
       }
-    },
-    async getBalance() {
+    }),
+    getBalance: waitFor('get-balance', async function () {
       try {
         const balance = await this.$web3.eth.getBalance(
           this.$lottery.options.address
@@ -126,8 +127,8 @@ export default {
       } catch (error) {
         console.error(error);
       }
-    },
-    async onPlayerEnter() {
+    }),
+    onPlayerEnter: waitFor('player-enter', async function () {
       try {
         await this.$lottery.methods.enter().send({
           from: this.currentUserAccountAddress,
@@ -137,7 +138,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    },
+    }),
   },
 };
 </script>

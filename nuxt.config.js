@@ -1,5 +1,6 @@
 import plugins from './nuxt.config.d/plugins';
 import i18n from './nuxt.config.d/i18n';
+import modules from './nuxt.config.d/modules';
 
 export default {
   // Global page headers (https://go.nuxtjs.dev/config-head)
@@ -31,14 +32,8 @@ export default {
     // Tailwind 1.9+
     '@nuxtjs/tailwindcss',
   ],
-
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: [
-    // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
-    'nuxt-i18n',
-  ],
-
+  modules,
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {},
 
