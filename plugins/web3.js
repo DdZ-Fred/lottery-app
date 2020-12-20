@@ -20,7 +20,12 @@ const web3Plugin = async ({ store }, inject) => {
     // Request the user to provide a account address.
     // It opens Metamask extension to allow the user to select one
     const accounts = await provider.request({ method: 'eth_requestAccounts' });
-    store.commit('user/setAccountAddress', accounts[0].toLowerCase());
+    if (accounts.length) {
+      console.log('[ACCOUNTS-REQUEST-OK]', { accounts });
+      store.commit('user/setAccountAddress', accounts[0]);
+    } else {
+      console.log('[ACCOUNTS-REQUEST-EMPTY]');
+    }
   } else {
     console.error('Please install Metamask!! using default provider');
     web3 = new Web3(Web3.givenProvider);

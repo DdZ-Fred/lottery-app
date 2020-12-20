@@ -1,17 +1,25 @@
 <template>
   <div class="p-8">
-    <h1 class="font-bold text-3xl pb-2">Lottery Contract</h1>
+    <h1 v-t="'lottery.title'" class="font-bold text-3xl pb-2" />
+    <language-selector />
     <div>
-      <span>The contract is managed by {{ managerAccountAddress }}</span>
-      <p>
-        There are currently {{ players.length }} people playing and competing to
-        win {{ etherBalance }} ether!
-      </p>
+      <span
+        v-t="{ path: 'lottery.managedBy', args: { managerAccountAddress } }"
+      />
+      <p
+        v-t="{
+          path: 'lottery.playersAndBalance',
+          args: {
+            playersCount: players.length,
+            lotteryEtherBalance: balance,
+          },
+        }"
+      />
     </div>
     <template v-if="managerAccountAddress === null">BLABLA</template>
-    <template v-else-if="isCurrentUserManager"> MANAGER CONTENT </template>
+    <template v-else-if="isCurrentUserManager">MANAGER CONTENT</template>
     <template v-else>
-      <h3 class="py-4 font-bold">Want to try your luck ?</h3>
+      <h3 v-t="'lottery.playerContent.title'" class="py-4 font-bold" />
       <div class="pl-6">
         <ValidationObserver
           ref="playerFormObserver"
@@ -20,12 +28,12 @@
           <a-form :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
             <ValidationProvider
               v-slot="slotProps"
-              name="Amount of ether"
+              :name="$t('lottery.playerContent.etherAmountField')"
               rules="required"
               slim
             >
               <a-form-item
-                label="Amount of ether to enter"
+                :label="$t('lottery.playerContent.etherAmountField')"
                 has-feedback
                 :validate-status="toValidateStatus(slotProps)"
                 :help="slotProps.errors[0]"
@@ -34,13 +42,12 @@
               </a-form-item>
             </ValidationProvider>
             <a-button
+              v-t="'common.enter'"
               type="primary"
               :disabled="invalid || !dirty"
               :loading="false"
               @click="onPlayerEnter"
-            >
-              Enter
-            </a-button>
+            />
           </a-form>
         </ValidationObserver>
       </div>
@@ -54,12 +61,14 @@
 import { mapState } from 'vuex';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import toValidateStatusMixin from '~/mixins/toValidateStatus';
+import LanguageSelector from '~/components/LanguageSelector.vue';
 
 export default {
   name: 'Lottery',
   components: {
     ValidationProvider,
     ValidationObserver,
+    LanguageSelector,
   },
   mixins: [toValidateStatusMixin],
   data() {

@@ -1,20 +1,19 @@
-import { extend } from 'vee-validate';
+import { extend, configure } from 'vee-validate';
 import * as rules from 'vee-validate/dist/rules.umd';
-import veeValidateEnLocale from 'vee-validate/dist/locale/en.json';
-import veeValidateFrLocale from 'vee-validate/dist/locale/fr.json';
 
-const allMessages = {
-  en: veeValidateEnLocale.messages,
-  fr: veeValidateFrLocale.messages,
-};
-
-function veeValidate3Plugin() {
+function veeValidate3Plugin({ app }) {
   // Rules aren't available by default so we're importing all of them here
   Object.keys(rules).forEach((rule) => {
     extend(rule, {
       ...rules[rule], // eslint-disable-line import/namespace
-      message: () => allMessages.en[rule],
     });
+  });
+
+  // Add more validation rules here
+
+  configure({
+    defaultMessage: (_, values) =>
+      app.i18n.t(`veeValidate.${values._rule_}`, values),
   });
 }
 

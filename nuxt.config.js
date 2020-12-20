@@ -1,3 +1,6 @@
+import plugins from './nuxt.config.d/plugins';
+import i18n from './nuxt.config.d/i18n';
+
 export default {
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
@@ -14,12 +17,7 @@ export default {
   css: ['ant-design-vue/dist/antd.css'],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: [
-    { src: '~/plugins/web3.js', mode: 'client' },
-    '~/plugins/antdv.js',
-    '~/plugins/filters/index.js',
-    '~/plugins/vee-validate.js',
-  ],
+  plugins,
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
@@ -38,6 +36,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    'nuxt-i18n',
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
@@ -45,4 +44,5 @@ export default {
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
+  i18n,
 };
